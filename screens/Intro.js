@@ -1,9 +1,11 @@
 import { Text } from "@react-native-material/core";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  Animated,
   Dimensions,
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -16,6 +18,20 @@ const WIDTH = Dimensions.get("window").width;
 
 export default function Intro({ navigation }) {
   const [imgActive, setImgActive] = useState(0);
+  const animatedScale = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    animatedScale.setValue(1);
+  }, []);
+  const handlePress = () => {
+    animatedScale.setValue(0.8);
+    Animated.spring(animatedScale, {
+      toValue: 1,
+      bounciness: 24,
+      speed: 20,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const onChage = (e) => {
     if (e) {
@@ -77,11 +93,18 @@ export default function Intro({ navigation }) {
           Express your self through the art of the fashionism
         </Text>
         <TouchableOpacity
-          style={{ paddingTop: 30 }}
+          style={{ paddingTop: 20 }}
           onPress={() => navigation.navigate("Home")}
         >
           <Icon name="arrow-circle-right" size={70} color="#965E2C" />
         </TouchableOpacity>
+        <Pressable onPress={handlePress}>
+          <Animated.View
+            style={[styles.button, { transform: [{ scale: animatedScale }] }]}
+          >
+            <Text style={styles.btntext}>Log in</Text>
+          </Animated.View>
+        </Pressable>
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -94,9 +117,22 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     alignItems: "center",
   },
+  button: {
+    marginTop: 20,
+    backgroundColor: "#965E2C",
+    width: 200,
+    height: 50,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btntext: {
+    fontSize: 20,
+    color: "white",
+  },
   wrap: {
     width: WIDTH,
-    height: WIDTH + 100,
+    height: WIDTH + 90,
   },
   wrapDot: {
     position: "absolute",
