@@ -18,7 +18,11 @@ const Detail = ({ route, navigation }) => {
   const [size, setSize] = useState("");
   const [count, setCount] = useState(0);
   const onPress = () => setCount((prevCount) => prevCount + 1);
-  const onPress1 = () => setCount((prevCount) => prevCount - 1);
+  const onPress1 = () => {
+    if (count > 0) {
+      setCount((prevCount) => prevCount - 1);
+    }
+  };
   const animatedScale = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
